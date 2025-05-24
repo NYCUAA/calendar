@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>陽明交大陽明交大校友活動行事曆</title>
+    <title>陽明交大校友活動行事曆</title>
     <style>
         * {
             margin: 0;
@@ -1611,9 +1611,9 @@
                     // 根據滑動方向決定切換到哪個月份
                     const direction = diffX > 0 ? -1 : 1; // 向右滑動切換到上一個月，向左滑動切換到下一個月
                     
-                    // 先滑動到邊緣
-                    const slideDistance = diffX > 0 ? calendar.offsetWidth : -calendar.offsetWidth;
-                    swipeContainer.style.transform = `translateX(${slideDistance}px)`;
+                    // 先滑動到邊緣（當前月份滑出）
+                    const slideOutDistance = diffX > 0 ? calendar.offsetWidth : -calendar.offsetWidth;
+                    swipeContainer.style.transform = `translateX(${slideOutDistance}px)`;
                     swipeContainer.style.opacity = '0.3';
                     
                     // 延遲切換月份，讓動畫看起來更自然
@@ -1621,8 +1621,11 @@
                         // 切換月份
                         currentDate.setMonth(currentDate.getMonth() + direction);
                         
-                        // 從相反方向滑入
-                        swipeContainer.style.transform = `translateX(${-slideDistance}px)`;
+                        // 新月份從相反方向開始（設定起始位置）
+                        // 往右滑（上一個月）：新月份從左邊滑入
+                        // 往左滑（下一個月）：新月份從右邊滑入
+                        const slideInStart = diffX > 0 ? -calendar.offsetWidth : calendar.offsetWidth;
+                        swipeContainer.style.transform = `translateX(${slideInStart}px)`;
                         
                         // 重新渲染日曆
                         renderCalendar();
