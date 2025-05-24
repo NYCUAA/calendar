@@ -921,18 +921,14 @@
             }
 
             .modal-header {
-                flex-direction: column;
-                gap: 10px;
-                align-items: stretch;
-            }
-
-            .modal-header-buttons {
-                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 15px;
             }
 
             .modal-title {
                 font-size: 18px;
-                margin-right: 0;
+                margin-right: 10px;
+                line-height: 1.3;
             }
 
             .back-btn {
@@ -1621,10 +1617,10 @@
                         // 切換月份
                         currentDate.setMonth(currentDate.getMonth() + direction);
                         
-                        // 新月份從手指滑動的相同方向開始（設定起始位置）
-                        // 往右滑（上一個月）：新月份從右邊跟隨滑入
-                        // 往左滑（下一個月）：新月份從左邊跟隨滑入
-                        const slideInStart = diffX > 0 ? calendar.offsetWidth : -calendar.offsetWidth;
+                        // 新月份從時間軸邏輯的方向滑入
+                        // 往右滑（上一個月）：新月份從左邊滑入（時間軸上上個月在左邊）
+                        // 往左滑（下一個月）：新月份從右邊滑入（時間軸上下個月在右邊）
+                        const slideInStart = diffX > 0 ? -calendar.offsetWidth : calendar.offsetWidth;
                         swipeContainer.style.transform = `translateX(${slideInStart}px)`;
                         
                         // 重新渲染日曆
