@@ -147,6 +147,23 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
             animation: fadeInUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 日曆滑動容器 */
+        .calendar-swipe-container {
+            position: relative;
+            width: 100%;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .calendar-swipe-container.no-transition {
+            transition: none;
+        }
+
+        .calendar-swipe-container.fast-transition {
+            transition: transform 0.2s ease-out;
         }
 
         /* 星期標題 */
@@ -495,6 +512,29 @@
             margin-right: 10px;
         }
 
+        .modal-header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
         .close-btn {
             background: #f0f0f0;
             border: none;
@@ -573,6 +613,81 @@
             font-size: 14px;
             line-height: 1.6;
             color: #555;
+        }
+
+        /* 活動列表樣式 */
+        .events-list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        .event-list-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-list-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .event-list-item.alumni {
+            border-left-color: #667eea;
+        }
+
+        .event-list-item.other {
+            border-left-color: #f093fb;
+        }
+
+        .event-list-header {
+            margin-bottom: 8px;
+        }
+
+        .event-list-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .event-list-meta {
+            margin-bottom: 8px;
+        }
+
+        .event-list-category {
+            display: inline-block;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-right: 6px;
+            font-weight: 500;
+        }
+
+        .event-list-category.alumni {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .event-list-category.other {
+            background: rgba(240, 147, 251, 0.1);
+            color: #f093fb;
+        }
+
+        .event-list-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         /* 近期活動 Modal 樣式 */
@@ -804,6 +919,38 @@
                 width: 95%;
                 padding: 20px;
             }
+
+            .modal-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+
+            .modal-header-buttons {
+                justify-content: space-between;
+            }
+
+            .modal-title {
+                font-size: 18px;
+                margin-right: 0;
+            }
+
+            .back-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .event-list-item {
+                padding: 12px;
+            }
+
+            .event-list-title {
+                font-size: 14px;
+            }
+
+            .events-list-container {
+                max-height: 300px;
+            }
         }
     </style>
 </head>
@@ -836,16 +983,18 @@
         </div>
 
         <div class="calendar" id="calendar">
-            <div class="weekdays">
-                <div class="weekday">日</div>
-                <div class="weekday">一</div>
-                <div class="weekday">二</div>
-                <div class="weekday">三</div>
-                <div class="weekday">四</div>
-                <div class="weekday">五</div>
-                <div class="weekday">六</div>
+            <div class="calendar-swipe-container" id="calendarSwipeContainer">
+                <div class="weekdays">
+                    <div class="weekday">日</div>
+                    <div class="weekday">一</div>
+                    <div class="weekday">二</div>
+                    <div class="weekday">三</div>
+                    <div class="weekday">四</div>
+                    <div class="weekday">五</div>
+                    <div class="weekday">六</div>
+                </div>
+                <div class="days" id="calendarDays"></div>
             </div>
-            <div class="days" id="calendarDays"></div>
         </div>
 
         <div class="loading" id="loading">載入中...</div>
@@ -873,14 +1022,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle"></h2>
-                <button class="close-btn" id="closeModal">×</button>
+                <div class="modal-header-buttons">
+                    <button class="back-btn" id="backToList" style="display: none;" onclick="backToEventsList()">← 返回列表</button>
+                    <button class="close-btn" id="closeModal">×</button>
+                </div>
             </div>
             <div class="modal-disclaimer">
                 此行事曆與截取文字為 AI 整理，可能有錯誤，詳情請至活動連結查看詳情
             </div>
-            <div class="breadcrumb" id="breadcrumb"></div>
-            <a href="#" class="event-link" id="eventLink" target="_blank">查看活動詳情</a>
-            <div class="event-content" id="eventContent"></div>
+            
+            <!-- 活動列表視圖 -->
+            <div id="eventsList" style="display: none;">
+                <div class="events-list-container" id="eventsListContainer"></div>
+            </div>
+            
+            <!-- 單一活動詳情視圖 -->
+            <div id="eventDetails">
+                <div class="breadcrumb" id="breadcrumb"></div>
+                <a href="#" class="event-link" id="eventLink" target="_blank">查看活動詳情</a>
+                <div class="event-content" id="eventContent"></div>
+            </div>
         </div>
     </div>
 
@@ -1070,7 +1231,7 @@
                 
                 dayEl.appendChild(eventList);
                 
-                dayEl.addEventListener('click', () => showEvents(dayEvents));
+                dayEl.addEventListener('click', () => showEvents(dayEvents, new Date(year, month, date)));
             }
             
             return dayEl;
@@ -1093,10 +1254,24 @@
         }
 
         // 顯示活動詳情
-        function showEvents(dayEvents) {
+        function showEvents(dayEvents, clickedDate) {
             if (dayEvents.length === 0) return;
             
-            const event = dayEvents[0]; // 如果有多個活動，顯示第一個
+            if (dayEvents.length === 1) {
+                // 只有一個活動，直接顯示活動詳情
+                showSingleEvent(dayEvents[0]);
+            } else {
+                // 有多個活動，顯示活動選擇列表
+                showEventsList(dayEvents, clickedDate);
+            }
+        }
+
+        // 顯示單一活動詳情
+        function showSingleEvent(event) {
+            // 隱藏活動列表，顯示活動詳情
+            document.getElementById('eventsList').style.display = 'none';
+            document.getElementById('eventDetails').style.display = 'block';
+            document.getElementById('backToList').style.display = 'none';
             
             // 設定標題
             const startDate = new Date(event.startDate);
@@ -1153,6 +1328,75 @@
             
             // 顯示 Modal
             document.getElementById('eventModal').style.display = 'block';
+        }
+
+        // 顯示多個活動的選擇列表
+        function showEventsList(dayEvents, clickedDate) {
+            // 顯示活動列表，隱藏活動詳情
+            document.getElementById('eventsList').style.display = 'block';
+            document.getElementById('eventDetails').style.display = 'none';
+            document.getElementById('backToList').style.display = 'none';
+            
+            // 使用被點擊的日期來顯示在標題
+            const dateText = `${clickedDate.getFullYear()}年${clickedDate.getMonth() + 1}月${clickedDate.getDate()}日`;
+            
+            document.getElementById('modalTitle').textContent = `${dateText} 的活動 (${dayEvents.length} 個)`;
+            
+            // 生成活動列表
+            const eventsListContainer = document.getElementById('eventsListContainer');
+            eventsListContainer.innerHTML = dayEvents.map((event, index) => {
+                const startDate = new Date(event.startDate);
+                const endDate = new Date(event.endDate);
+                const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+                const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                
+                // 格式化日期顯示
+                let dateDisplay = '';
+                if (startDateOnly.getTime() !== endDateOnly.getTime()) {
+                    const formatDate = (date) => `${date.getMonth() + 1}/${date.getDate()}`;
+                    dateDisplay = ` (${formatDate(startDate)} - ${formatDate(endDate)})`;
+                }
+                
+                const categoryClass = event['分類'] === '校友會' ? 'alumni' : 'other';
+                const description = event['原始資料'] ? 
+                    event['原始資料'].substring(0, 80) + (event['原始資料'].length > 80 ? '...' : '') : 
+                    '無詳細描述';
+                
+                return `
+                    <div class="event-list-item ${categoryClass}" onclick="showSingleEventFromList(${index})">
+                        <div class="event-list-header">
+                            <div class="event-list-title">${event['活動名稱']}${dateDisplay}</div>
+                        </div>
+                        <div class="event-list-meta">
+                            <span class="event-list-category ${categoryClass}">${event['分類'] || '其他'}</span>
+                            ${event['活動地點分類'] ? `<span class="event-list-category ${categoryClass}">${event['活動地點分類']}</span>` : ''}
+                        </div>
+                        <div class="event-list-description">${description}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // 儲存當前的活動列表和點擊日期以供後續使用
+            window.currentDayEvents = dayEvents;
+            window.currentClickedDate = clickedDate;
+            
+            // 顯示 Modal
+            document.getElementById('eventModal').style.display = 'block';
+        }
+
+        // 從活動列表中選擇特定活動顯示詳情
+        function showSingleEventFromList(eventIndex) {
+            const event = window.currentDayEvents[eventIndex];
+            // 顯示返回按鈕
+            document.getElementById('backToList').style.display = 'inline-block';
+            showSingleEvent(event);
+        }
+
+        // 返回活動列表
+        function backToEventsList() {
+            if (window.currentDayEvents && window.currentDayEvents.length > 1) {
+                showEventsList(window.currentDayEvents, window.currentClickedDate);
+            }
         }
 
         // 獲取近兩週活動
@@ -1246,7 +1490,7 @@
             const event = events.find(e => e['活動名稱'] === eventName);
             if (event) {
                 document.getElementById('upcomingEventsModal').style.display = 'none';
-                showEvents([event]);
+                showSingleEvent(event);
             }
         }
 
@@ -1299,30 +1543,30 @@
         // 設定日曆滑動手勢
         function setupCalendarSwipe() {
             const calendar = document.getElementById('calendar');
+            const swipeContainer = document.getElementById('calendarSwipeContainer');
             let startX = 0;
             let startY = 0;
             let currentX = 0;
-            let isSwipeDetected = false;
-            let swipeThreshold = 50; // 最小滑動距離
-            let swipeTimeout = null;
+            let isSwipeActive = false;
+            let swipeThreshold = 80; // 觸發切換的最小滑動距離
+            let isAnimating = false;
 
             // 觸控開始
             calendar.addEventListener('touchstart', (e) => {
+                if (isAnimating) return;
+                
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
                 currentX = startX;
-                isSwipeDetected = false;
+                isSwipeActive = false;
                 
-                // 清除之前的超時
-                if (swipeTimeout) {
-                    clearTimeout(swipeTimeout);
-                    swipeTimeout = null;
-                }
+                // 移除過渡效果，讓滑動更跟手
+                swipeContainer.classList.add('no-transition');
             }, { passive: true });
 
             // 觸控移動
             calendar.addEventListener('touchmove', (e) => {
-                if (!startX) return;
+                if (!startX || isAnimating) return;
                 
                 currentX = e.touches[0].clientX;
                 const currentY = e.touches[0].clientY;
@@ -1330,72 +1574,103 @@
                 const diffX = currentX - startX;
                 const diffY = currentY - startY;
                 
-                // 判斷是否為水平滑動（水平距離大於垂直距離）
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 20) {
+                // 判斷是否為水平滑動（水平距離大於垂直距離且超過最小閾值）
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 15) {
                     // 防止頁面滾動
                     e.preventDefault();
+                    isSwipeActive = true;
                     
-                    // 添加視覺反饋
-                    const translateX = Math.max(-30, Math.min(30, diffX * 0.3));
-                    calendar.style.transform = `translateX(${translateX}px)`;
-                    calendar.style.transition = 'none';
+                    // 計算滑動距離，限制在合理範圍內
+                    const maxSlide = calendar.offsetWidth * 0.8; // 最大滑動距離為寬度的80%
+                    const slideDistance = Math.max(-maxSlide, Math.min(maxSlide, diffX));
                     
-                    if (Math.abs(diffX) > swipeThreshold) {
-                        isSwipeDetected = true;
-                    }
+                    // 應用滑動變換，讓整個日曆跟隨手指移動
+                    swipeContainer.style.transform = `translateX(${slideDistance}px)`;
+                    
+                    // 添加透明度效果，讓滑動更有層次感
+                    const opacity = 1 - Math.abs(slideDistance) / maxSlide * 0.3;
+                    swipeContainer.style.opacity = Math.max(0.7, opacity);
                 }
             }, { passive: false });
 
             // 觸控結束
             calendar.addEventListener('touchend', (e) => {
-                if (!startX) return;
+                if (!startX || isAnimating) return;
                 
                 const diffX = currentX - startX;
+                const absDistance = Math.abs(diffX);
                 
-                // 重置視覺效果
-                calendar.style.transform = '';
-                calendar.style.transition = 'transform 0.3s ease';
+                // 恢復過渡效果
+                swipeContainer.classList.remove('no-transition');
+                swipeContainer.classList.add('fast-transition');
                 
-                // 重置過渡效果
-                swipeTimeout = setTimeout(() => {
-                    calendar.style.transition = '';
-                }, 300);
-                
-                if (isSwipeDetected && Math.abs(diffX) > swipeThreshold) {
-                    if (diffX > 0) {
-                        // 向右滑動 - 上一個月
-                        currentDate.setMonth(currentDate.getMonth() - 1);
+                if (isSwipeActive && absDistance > swipeThreshold) {
+                    // 滑動距離足夠，執行切換
+                    isAnimating = true;
+                    
+                    // 根據滑動方向決定切換到哪個月份
+                    const direction = diffX > 0 ? -1 : 1; // 向右滑動切換到上一個月，向左滑動切換到下一個月
+                    
+                    // 先滑動到邊緣
+                    const slideDistance = diffX > 0 ? calendar.offsetWidth : -calendar.offsetWidth;
+                    swipeContainer.style.transform = `translateX(${slideDistance}px)`;
+                    swipeContainer.style.opacity = '0.3';
+                    
+                    // 延遲切換月份，讓動畫看起來更自然
+                    setTimeout(() => {
+                        // 切換月份
+                        currentDate.setMonth(currentDate.getMonth() + direction);
+                        
+                        // 從相反方向滑入
+                        swipeContainer.style.transform = `translateX(${-slideDistance}px)`;
+                        
+                        // 重新渲染日曆
                         renderCalendar();
-                    } else {
-                        // 向左滑動 - 下一個月
-                        currentDate.setMonth(currentDate.getMonth() + 1);
-                        renderCalendar();
-                    }
+                        
+                        // 執行滑入動畫
+                        setTimeout(() => {
+                            swipeContainer.style.transform = 'translateX(0)';
+                            swipeContainer.style.opacity = '1';
+                            
+                            // 動畫完成後重置狀態
+                            setTimeout(() => {
+                                swipeContainer.classList.remove('fast-transition');
+                                isAnimating = false;
+                            }, 200);
+                        }, 10);
+                    }, 150);
+                } else {
+                    // 滑動距離不夠，回彈到原位
+                    swipeContainer.style.transform = 'translateX(0)';
+                    swipeContainer.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        swipeContainer.classList.remove('fast-transition');
+                        isAnimating = false;
+                    }, 200);
                 }
                 
                 // 重置變數
                 startX = 0;
                 startY = 0;
                 currentX = 0;
-                isSwipeDetected = false;
+                isSwipeActive = false;
             }, { passive: true });
 
             // 觸控取消
             calendar.addEventListener('touchcancel', () => {
-                // 重置視覺效果
-                calendar.style.transform = '';
-                calendar.style.transition = 'transform 0.3s ease';
+                if (isAnimating) return;
                 
-                // 重置過渡效果
-                swipeTimeout = setTimeout(() => {
-                    calendar.style.transition = '';
-                }, 300);
+                // 重置狀態
+                swipeContainer.classList.remove('no-transition');
+                swipeContainer.style.transform = 'translateX(0)';
+                swipeContainer.style.opacity = '1';
                 
                 // 重置變數
                 startX = 0;
                 startY = 0;
                 currentX = 0;
-                isSwipeDetected = false;
+                isSwipeActive = false;
             }, { passive: true });
         }
 
