@@ -1291,6 +1291,112 @@
                     document.getElementById('upcomingEventsModal').style.display = 'none';
                 }
             });
+
+            // 設定日曆滑動手勢
+            setupCalendarSwipe();
+        }
+
+        // 設定日曆滑動手勢
+        function setupCalendarSwipe() {
+            const calendar = document.getElementById('calendar');
+            let startX = 0;
+            let startY = 0;
+            let currentX = 0;
+            let isSwipeDetected = false;
+            let swipeThreshold = 50; // 最小滑動距離
+            let swipeTimeout = null;
+
+            // 觸控開始
+            calendar.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                currentX = startX;
+                isSwipeDetected = false;
+                
+                // 清除之前的超時
+                if (swipeTimeout) {
+                    clearTimeout(swipeTimeout);
+                    swipeTimeout = null;
+                }
+            }, { passive: true });
+
+            // 觸控移動
+            calendar.addEventListener('touchmove', (e) => {
+                if (!startX) return;
+                
+                currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                
+                const diffX = currentX - startX;
+                const diffY = currentY - startY;
+                
+                // 判斷是否為水平滑動（水平距離大於垂直距離）
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 20) {
+                    // 防止頁面滾動
+                    e.preventDefault();
+                    
+                    // 添加視覺反饋
+                    const translateX = Math.max(-30, Math.min(30, diffX * 0.3));
+                    calendar.style.transform = `translateX(${translateX}px)`;
+                    calendar.style.transition = 'none';
+                    
+                    if (Math.abs(diffX) > swipeThreshold) {
+                        isSwipeDetected = true;
+                    }
+                }
+            }, { passive: false });
+
+            // 觸控結束
+            calendar.addEventListener('touchend', (e) => {
+                if (!startX) return;
+                
+                const diffX = currentX - startX;
+                
+                // 重置視覺效果
+                calendar.style.transform = '';
+                calendar.style.transition = 'transform 0.3s ease';
+                
+                // 重置過渡效果
+                swipeTimeout = setTimeout(() => {
+                    calendar.style.transition = '';
+                }, 300);
+                
+                if (isSwipeDetected && Math.abs(diffX) > swipeThreshold) {
+                    if (diffX > 0) {
+                        // 向右滑動 - 上一個月
+                        currentDate.setMonth(currentDate.getMonth() - 1);
+                        renderCalendar();
+                    } else {
+                        // 向左滑動 - 下一個月
+                        currentDate.setMonth(currentDate.getMonth() + 1);
+                        renderCalendar();
+                    }
+                }
+                
+                // 重置變數
+                startX = 0;
+                startY = 0;
+                currentX = 0;
+                isSwipeDetected = false;
+            }, { passive: true });
+
+            // 觸控取消
+            calendar.addEventListener('touchcancel', () => {
+                // 重置視覺效果
+                calendar.style.transform = '';
+                calendar.style.transition = 'transform 0.3s ease';
+                
+                // 重置過渡效果
+                swipeTimeout = setTimeout(() => {
+                    calendar.style.transition = '';
+                }, 300);
+                
+                // 重置變數
+                startX = 0;
+                startY = 0;
+                currentX = 0;
+                isSwipeDetected = false;
+            }, { passive: true });
         }
 
         // 啟動應用程式
