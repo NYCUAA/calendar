@@ -103,7 +103,25 @@
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
+        /* 活動說明區塊 */
+        .event-description {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-out;
+            text-align: center;
+        }
 
+        .event-description p {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #555;
+            margin: 0;
+            font-weight: 500;
+        }
 
         .month-nav {
             display: flex;
@@ -986,6 +1004,16 @@
                 font-size: 36px;
                 margin-bottom: 10px;
             }
+
+            .event-description {
+                padding: 12px 15px;
+                margin-bottom: 15px;
+            }
+
+            .event-description p {
+                font-size: 11px;
+                line-height: 1.5;
+            }
         }
     </style>
 </head>
@@ -1013,8 +1041,12 @@
             </div>
             <div class="legend-item">
                 <div class="legend-color other-color"></div>
-                <span>其他活動</span>
+                <span>非校友會活動</span>
             </div>
+        </div>
+
+        <div class="event-description">
+            <p>陽明交大校友總會為各位整理除了本會舉辦的活動外，也同時整理各個地區校友會所舉辦的活動，及各大校友可能會有興趣的活動（標記為「非校友會活動」），供各位學長姐參考</p>
         </div>
 
         <div class="calendar" id="calendar">
