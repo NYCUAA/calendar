@@ -957,7 +957,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>NYCUAA 優質活動整理包</h1>
+            <h1>NYCUAA 優質活動整理包！</h1>
             <div class="disclaimer">
                 此行事曆與截取文字為 AI 整理，可能有錯誤，詳情請至活動連結查看詳情
             </div>
@@ -1621,10 +1621,10 @@
                         // 切換月份
                         currentDate.setMonth(currentDate.getMonth() + direction);
                         
-                        // 新月份從相反方向開始（設定起始位置）
-                        // 往右滑（上一個月）：新月份從左邊滑入
-                        // 往左滑（下一個月）：新月份從右邊滑入
-                        const slideInStart = diffX > 0 ? -calendar.offsetWidth : calendar.offsetWidth;
+                        // 新月份從手指滑動的相同方向開始（設定起始位置）
+                        // 往右滑（上一個月）：新月份從右邊跟隨滑入
+                        // 往左滑（下一個月）：新月份從左邊跟隨滑入
+                        const slideInStart = diffX > 0 ? calendar.offsetWidth : -calendar.offsetWidth;
                         swipeContainer.style.transform = `translateX(${slideInStart}px)`;
                         
                         // 重新渲染日曆
