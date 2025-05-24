@@ -626,6 +626,41 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
+        /* 活動基本資訊 */
+        .event-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .event-info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .event-info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .event-info-label {
+            font-weight: 600;
+            color: #333;
+            min-width: 80px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .event-info-value {
+            color: #555;
+            flex: 1;
+            word-break: break-word;
+        }
+
         /* 活動內容 */
         .event-content {
             background: #f8f9fa;
@@ -1031,6 +1066,21 @@
                 font-size: 11px;
                 line-height: 1.5;
             }
+            
+            .event-info {
+                padding: 12px;
+                margin: 12px 0;
+            }
+            
+            .event-info-item {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+            
+            .event-info-label {
+                min-width: 70px;
+                margin-right: 8px;
+            }
         }
     </style>
 </head>
@@ -1125,6 +1175,10 @@
             <!-- 單一活動詳情視圖 -->
             <div id="eventDetails">
                 <div class="breadcrumb" id="breadcrumb"></div>
+                
+                <!-- 活動基本資訊 -->
+                <div class="event-info" id="eventInfo"></div>
+                
                 <a href="#" class="event-link" id="eventLink" target="_blank">查看活動詳情</a>
                 <div class="event-content" id="eventContent"></div>
             </div>
@@ -1399,6 +1453,58 @@
                 item.textContent = event['活動性質'];
                 breadcrumb.appendChild(item);
             }
+            
+            // 設定活動基本資訊
+            const eventInfo = document.getElementById('eventInfo');
+            let infoHTML = '';
+            
+            // 活動時間
+            const formatDateTime = (date) => {
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+                const weekday = weekdays[date.getDay()];
+                return `${year}年${month}月${day}日 (${weekday})`;
+            };
+            
+            if (startDateOnly.getTime() === endDateOnly.getTime()) {
+                infoHTML += `
+                    <div class="event-info-item">
+                        <div class="event-info-label">活動時間：</div>
+                        <div class="event-info-value">${formatDateTime(startDate)}</div>
+                    </div>
+                `;
+            } else {
+                infoHTML += `
+                    <div class="event-info-item">
+                        <div class="event-info-label">活動時間：</div>
+                        <div class="event-info-value">${formatDateTime(startDate)} - ${formatDateTime(endDate)}</div>
+                    </div>
+                `;
+            }
+            
+            // 活動地點
+            if (event['活動地點']) {
+                infoHTML += `
+                    <div class="event-info-item">
+                        <div class="event-info-label">活動地點：</div>
+                        <div class="event-info-value">${event['活動地點']}</div>
+                    </div>
+                `;
+            }
+            
+            // 活動單位
+            if (event['活動單位']) {
+                infoHTML += `
+                    <div class="event-info-item">
+                        <div class="event-info-label">主辦單位：</div>
+                        <div class="event-info-value">${event['活動單位']}</div>
+                    </div>
+                `;
+            }
+            
+            eventInfo.innerHTML = infoHTML;
             
             // 設定活動連結
             const eventLink = document.getElementById('eventLink');
