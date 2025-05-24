@@ -208,7 +208,7 @@
         }
 
         .day {
-            min-height: 80px;
+            min-height: 120px;
             border-radius: 12px;
             padding: 8px 5px;
             display: flex;
@@ -359,18 +359,24 @@
         }
 
         .event-item {
-            font-size: 10px;
-            line-height: 1.2;
+            font-size: 9px;
+            line-height: 1.3;
             background: rgba(255, 255, 255, 0.7);
-            padding: 2px 4px;
+            padding: 3px 4px;
             border-radius: 4px;
             text-align: center;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            white-space: normal;
             color: #444;
             font-weight: 500;
             position: relative;
+            max-height: 26px;
+            word-break: break-word;
+            min-height: 20px;
         }
 
         .event-item.alumni {
@@ -940,6 +946,17 @@
             
             .day {
                 font-size: 12px;
+                min-height: 140px;
+                padding: 6px 4px;
+            }
+            
+            .event-item {
+                font-size: 8px;
+                line-height: 1.4;
+                padding: 3px 3px;
+                max-height: 28px;
+                min-height: 22px;
+                -webkit-line-clamp: 3;
             }
             
             .modal-content {
@@ -1081,7 +1098,7 @@
             </div>
             <div class="upcoming-events-list" id="upcomingEventsList"></div>
             <div class="upcoming-modal-footer">
-                <button class="btn-primary" id="closeUpcomingBtn">開始使用行事曆</button>
+                <button class="btn-primary" id="closeUpcomingBtn">查看完整行事曆</button>
             </div>
         </div>
     </div>
