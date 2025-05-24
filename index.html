@@ -694,12 +694,15 @@
         .upcoming-modal {
             max-width: 600px;
             max-height: 85vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .upcoming-events-list {
-            max-height: 400px;
+            flex: 1;
             overflow-y: auto;
             margin: 20px 0;
+            min-height: 0;
         }
 
         .upcoming-event-item {
@@ -714,7 +717,6 @@
 
         .upcoming-event-item:hover {
             background: #e9ecef;
-            transform: translateX(5px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
@@ -782,8 +784,10 @@
 
         .upcoming-modal-footer {
             text-align: center;
-            padding-top: 20px;
+            padding: 20px 0 0 0;
             border-top: 1px solid #e9ecef;
+            flex-shrink: 0;
+            margin-top: auto;
         }
 
         .btn-primary {
@@ -806,8 +810,13 @@
 
         .no-upcoming-events {
             text-align: center;
-            padding: 40px 20px;
+            padding: 20px;
             color: #666;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 200px;
         }
 
         .no-upcoming-events .icon {
@@ -947,6 +956,36 @@
             .events-list-container {
                 max-height: 300px;
             }
+
+            .upcoming-modal {
+                max-height: 90vh;
+            }
+
+            .upcoming-events-list {
+                margin: 15px 0;
+            }
+
+            .upcoming-event-item {
+                padding: 12px;
+            }
+
+            .upcoming-event-title {
+                font-size: 14px;
+            }
+
+            .upcoming-modal-footer {
+                padding: 15px 0 0 0;
+            }
+
+            .no-upcoming-events {
+                padding: 15px;
+                min-height: 150px;
+            }
+
+            .no-upcoming-events .icon {
+                font-size: 36px;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -955,7 +994,7 @@
         <div class="header">
             <h1>NYCUAA 優質活動整理包！</h1>
             <div class="disclaimer">
-                此行事曆與截取文字為 AI 整理，可能有錯誤，詳情請至活動連結查看詳情
+                此行事曆與截取文字為 AI 整理，可能有錯誤或活動可能會更新資訊，詳情請至活動連結查看詳情
             </div>
         </div>
 
@@ -970,7 +1009,7 @@
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-color alumni-color"></div>
-                <span>校友會</span>
+                <span>校友會相關活動</span>
             </div>
             <div class="legend-item">
                 <div class="legend-color other-color"></div>
@@ -1004,7 +1043,7 @@
                 <button class="close-btn" id="closeUpcomingModal">×</button>
             </div>
             <div class="modal-disclaimer">
-                此行事曆與截取文字為 AI 整理，可能有錯誤，詳情請至活動連結查看詳情
+                此行事曆與截取文字為 AI 整理，可能有錯誤或活動可能會更新資訊，詳情請至活動連結查看詳情
             </div>
             <div class="upcoming-events-list" id="upcomingEventsList"></div>
             <div class="upcoming-modal-footer">
@@ -1024,7 +1063,7 @@
                 </div>
             </div>
             <div class="modal-disclaimer">
-                此行事曆與截取文字為 AI 整理，可能有錯誤，詳情請至活動連結查看詳情
+                此行事曆與截取文字為 AI 整理，可能有錯誤或活動可能會更新資訊，詳情請至活動連結查看詳情
             </div>
             
             <!-- 活動列表視圖 -->
@@ -1546,6 +1585,7 @@
             let isSwipeActive = false;
             let swipeThreshold = 80; // 觸發切換的最小滑動距離
             let isAnimating = false;
+            let tempContainer = null; // 臨時容器，用於實現連續效果
 
             // 觸控開始
             calendar.addEventListener('touchstart', (e) => {
@@ -1607,37 +1647,48 @@
                     // 根據滑動方向決定切換到哪個月份
                     const direction = diffX > 0 ? -1 : 1; // 向右滑動切換到上一個月，向左滑動切換到下一個月
                     
-                    // 先滑動到邊緣（當前月份滑出）
+                    // 完全滑出（當前月份滑出）
                     const slideOutDistance = diffX > 0 ? calendar.offsetWidth : -calendar.offsetWidth;
                     swipeContainer.style.transform = `translateX(${slideOutDistance}px)`;
                     swipeContainer.style.opacity = '0.3';
                     
-                    // 延遲切換月份，讓動畫看起來更自然
+                    // 延遲後處理月份切換
                     setTimeout(() => {
-                        // 切換月份
+                        // 移除過渡效果（為下一步準備）
+                        swipeContainer.classList.remove('fast-transition');
+                        
+                        // 切換月份並更新畫面（無動畫）
                         currentDate.setMonth(currentDate.getMonth() + direction);
-                        
-                        // 新月份從時間軸邏輯的方向滑入
-                        // 往右滑（上一個月）：新月份從左邊滑入（時間軸上上個月在左邊）
-                        // 往左滑（下一個月）：新月份從右邊滑入（時間軸上下個月在右邊）
-                        const slideInStart = diffX > 0 ? -calendar.offsetWidth : calendar.offsetWidth;
-                        swipeContainer.style.transform = `translateX(${slideInStart}px)`;
-                        
-                        // 重新渲染日曆
                         renderCalendar();
                         
-                        // 執行滑入動畫
+                        // 完全反轉方向
+                        // 左滑時：新月份從左側(-100%)開始
+                        // 右滑時：新月份從右側(100%)開始
+                        if (diffX > 0) {
+                            // 往右滑 - 上個月從右邊滑入
+                            swipeContainer.style.transform = 'translateX(100%)';
+                        } else {
+                            // 往左滑 - 下個月從左邊滑入
+                            swipeContainer.style.transform = 'translateX(-100%)';
+                        }
+                        
+                        // 確保上述樣式立即應用
                         setTimeout(() => {
-                            swipeContainer.style.transform = 'translateX(0)';
+                            // 添加過渡效果
+                            swipeContainer.classList.add('fast-transition');
+                            // 恢復完全不透明
                             swipeContainer.style.opacity = '1';
+                            
+                            // 執行滑入動畫（回到中心位置）
+                            swipeContainer.style.transform = 'translateX(0)';
                             
                             // 動畫完成後重置狀態
                             setTimeout(() => {
                                 swipeContainer.classList.remove('fast-transition');
                                 isAnimating = false;
-                            }, 200);
-                        }, 10);
-                    }, 150);
+                            }, 250);
+                        }, 50);
+                    }, 200);
                 } else {
                     // 滑動距離不夠，回彈到原位
                     swipeContainer.style.transform = 'translateX(0)';
