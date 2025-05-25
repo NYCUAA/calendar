@@ -1,9 +1,9 @@
-name: Deploy to aws
+name: Deploy to AWS
 
 on:
   push:
     branches:
-      - main  # or your deployment branch
+      - main
 
 jobs:
   deploy:
@@ -16,10 +16,10 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.DEPLOY_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 52.194.159.119 >> ~/.ssh/known_hosts
 
-      - name: Deploy files to aws /var/www/html/nycuaa.org/calendar
+      - name: Deploy files to AWS
         run: |
-          rsync -avz -e "ssh -p 22211" ./ ubuntu@52.194.159.119:/var/www/html/nycuaa.org/calendar
+          rsync -avz -e "ssh -i ~/.ssh/id_rsa -p 22211 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa" ./ ubuntu@52.194.159.119:/var/www/html/nycuaa.org/calendar
