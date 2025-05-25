@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px 15px;
             min-height: 100vh;
@@ -292,6 +292,12 @@
             border: 2px solid #667eea;
         }
 
+        .day.today.has-events.mixed-events {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 75%, #f5576c 100%);
+            color: white;
+            border: 2px solid #8b9dc3;
+        }
+
         @keyframes todayBorder {
             0%, 100% { 
                 box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.2);
@@ -329,6 +335,12 @@
             opacity: 0.8;
         }
 
+        .day.past.has-events.mixed-events {
+            background: linear-gradient(135deg, #9fa8da 0%, #7986cb 25%, #f48fb1 75%, #e91e63 100%);
+            color: #5c6bc0;
+            opacity: 0.8;
+        }
+
         .day.has-events {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             color: #333;
@@ -344,6 +356,12 @@
         /* 其他活動樣式 */
         .day.has-events.other-events {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        /* 混合活動樣式（同時有校友會和非校友會活動） */
+        .day.has-events.mixed-events {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 75%, #f5576c 100%);
             color: white;
         }
 
@@ -626,6 +644,14 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
+        .event-link.alumni-theme {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .event-link.other-theme {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
         /* 活動基本資訊 */
         .event-info {
             background: #f8f9fa;
@@ -633,6 +659,16 @@
             padding: 15px;
             margin: 15px 0;
             border-left: 4px solid #667eea;
+        }
+
+        .event-info.alumni-theme {
+            border-left-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+
+        .event-info.other-theme {
+            border-left-color: #f093fb;
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.05) 0%, rgba(245, 87, 108, 0.05) 100%);
         }
 
         .event-info-item {
@@ -701,8 +737,16 @@
             border-left-color: #667eea;
         }
 
+        .event-list-item.alumni:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
         .event-list-item.other {
             border-left-color: #f093fb;
+        }
+
+        .event-list-item.other:hover {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%);
         }
 
         .event-list-header {
@@ -783,8 +827,16 @@
             border-left-color: #667eea;
         }
 
+        .upcoming-event-item.alumni:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
         .upcoming-event-item.other {
             border-left-color: #f093fb;
+        }
+
+        .upcoming-event-item.other:hover {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%);
         }
 
         .upcoming-event-header {
@@ -925,27 +977,266 @@
 
         /* 載入動畫 */
         .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .loading-content {
             text-align: center;
-            padding: 40px;
             color: white;
         }
 
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+        .loading-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: fadeInDown 0.8s ease-out;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .loading-subtitle {
+            font-size: 14px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .calendar-loader {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+        }
+
+        .calendar-frame {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            animation: bounceIn 1s ease-out 0.4s both;
+        }
+
+        .calendar-header {
+            height: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-header::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 15px;
+            width: 4px;
+            height: 10px;
+            background: white;
+            border-radius: 2px;
+            box-shadow: 12px 0 0 white, 24px 0 0 white;
+        }
+
+        .calendar-month {
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .calendar-grid {
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            height: calc(100% - 25px);
+        }
+
+        .calendar-day {
+            background: #f8f9fa;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: 500;
+            color: #666;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-day.highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            animation: dayPulse 1.5s ease-in-out infinite;
+        }
+
+        .calendar-day.event {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            animation: dayPulse 1.5s ease-in-out infinite 0.3s;
+        }
+
+        @keyframes dayPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+            50% { 
+                transform: scale(1.1);
+                box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .loading-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: dotBounce 1.4s ease-in-out infinite both;
+        }
+
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes dotBounce {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            animation: textPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05) rotate(2deg);
+            }
+            70% {
+                transform: scale(0.95) rotate(-1deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px auto 0;
+            position: relative;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.8) 100%);
+            border-radius: 2px;
+            animation: progressSlide 2s ease-in-out infinite;
+        }
+
+        @keyframes progressSlide {
+            0% {
+                width: 0%;
+                transform: translateX(-100%);
+            }
+            50% {
+                width: 100%;
+                transform: translateX(0%);
+            }
+            100% {
+                width: 0%;
+                transform: translateX(100%);
+            }
+        }
+
+        /* 載入完成淡出動畫 */
+        .loading.fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* Footer 樣式 */
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 30px;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
         /* 響應式設計 */
+        @media (min-width: 1024px) {
+            .container {
+                padding: 30px 40px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .container {
+                padding: 40px 60px;
+            }
+        }
+
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 24px;
@@ -1081,6 +1372,79 @@
                 min-width: 70px;
                 margin-right: 8px;
             }
+
+            .footer {
+                margin-top: 20px;
+                padding: 15px 0;
+            }
+
+            .footer-content {
+                font-size: 12px;
+            }
+
+            /* 手機版載入動畫優化 */
+            .loading-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .loading-subtitle {
+                font-size: 12px;
+                margin-bottom: 30px;
+            }
+
+            .calendar-loader {
+                width: 100px;
+                height: 100px;
+                margin: 0 auto 25px;
+            }
+
+            .calendar-header {
+                height: 20px;
+            }
+
+            .calendar-header::before {
+                top: 6px;
+                left: 12px;
+                width: 3px;
+                height: 8px;
+                box-shadow: 10px 0 0 white, 20px 0 0 white;
+            }
+
+            .calendar-month {
+                font-size: 9px;
+            }
+
+            .calendar-grid {
+                padding: 6px;
+                gap: 1px;
+                height: calc(100% - 20px);
+            }
+
+            .calendar-day {
+                font-size: 7px;
+                border-radius: 2px;
+            }
+
+            .loading-dots {
+                gap: 6px;
+                margin-bottom: 15px;
+            }
+
+            .loading-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .loading-text {
+                font-size: 14px;
+            }
+
+            .loading-progress {
+                width: 160px;
+                height: 3px;
+                margin: 15px auto 0;
+            }
         }
     </style>
 </head>
@@ -1133,8 +1497,63 @@
             </div>
         </div>
 
-        <div class="loading" id="loading">載入中...</div>
+        <div class="loading" id="loading">
+            <div class="loading-content">
+                <div class="loading-title">NYCUAA 優質活動整理包</div>
+                <div class="loading-subtitle">正在為您載入最新活動資訊...</div>
+                
+                <div class="calendar-loader">
+                    <div class="calendar-frame">
+                        <div class="calendar-header">
+                            <div class="calendar-month">2025</div>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-day">1</div>
+                            <div class="calendar-day">2</div>
+                            <div class="calendar-day">3</div>
+                            <div class="calendar-day highlight">4</div>
+                            <div class="calendar-day">5</div>
+                            <div class="calendar-day event">6</div>
+                            <div class="calendar-day">7</div>
+                            <div class="calendar-day">8</div>
+                            <div class="calendar-day">9</div>
+                            <div class="calendar-day highlight">10</div>
+                            <div class="calendar-day">11</div>
+                            <div class="calendar-day">12</div>
+                            <div class="calendar-day">13</div>
+                            <div class="calendar-day">14</div>
+                            <div class="calendar-day">15</div>
+                            <div class="calendar-day event">16</div>
+                            <div class="calendar-day">17</div>
+                            <div class="calendar-day">18</div>
+                            <div class="calendar-day">19</div>
+                            <div class="calendar-day">20</div>
+                            <div class="calendar-day">21</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+                
+                <div class="loading-text">載入中</div>
+                
+                <div class="loading-progress">
+                    <div class="loading-progress-bar"></div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            NYCUAA 2025
+        </div>
+    </footer>
 
     <!-- 近期活動 Modal -->
     <div class="modal" id="upcomingEventsModal">
@@ -1218,17 +1637,49 @@
                             endDate: endDate
                         };
                     });
-                    document.getElementById('loading').style.display = 'none';
                     
-                    // 顯示近期活動modal
-                    showUpcomingEventsModal();
+                    // 載入完成動畫
+                    hideLoadingWithAnimation();
+                    
+                    // 延遲顯示近期活動modal，讓載入動畫完成
+                    setTimeout(() => {
+                        showUpcomingEventsModal();
+                    }, 600);
                 } else {
                     console.error(data.message);
                 }
             } catch (error) {
                 console.error('載入活動資料失敗:', error);
-                document.getElementById('loading').innerHTML = '載入失敗，請重新整理頁面';
+                const loadingEl = document.getElementById('loading');
+                loadingEl.innerHTML = `
+                    <div class="loading-content">
+                        <div class="loading-title">載入失敗</div>
+                        <div class="loading-subtitle">請檢查網路連線並重新整理頁面</div>
+                        <div class="loading-text">😔</div>
+                    </div>
+                `;
             }
+        }
+
+        // 載入完成動畫
+        function hideLoadingWithAnimation() {
+            const loadingEl = document.getElementById('loading');
+            const loadingText = loadingEl.querySelector('.loading-text');
+            
+            // 更新載入文字
+            if (loadingText) {
+                loadingText.textContent = '載入完成！';
+            }
+            
+            // 延遲後開始淡出動畫
+            setTimeout(() => {
+                loadingEl.classList.add('fade-out');
+                
+                // 動畫完成後隱藏元素
+                setTimeout(() => {
+                    loadingEl.style.display = 'none';
+                }, 500);
+            }, 300);
         }
 
         // 渲染行事曆
@@ -1306,7 +1757,9 @@
                 const hasAlumni = categories.includes('校友會');
                 const hasOther = categories.includes('其他活動');
                 
-                if (hasAlumni) {
+                if (hasAlumni && hasOther) {
+                    dayEl.classList.add('mixed-events');
+                } else if (hasAlumni) {
                     dayEl.classList.add('alumni-events');
                 } else if (hasOther) {
                     dayEl.classList.add('other-events');
@@ -1456,6 +1909,15 @@
             
             // 設定活動基本資訊
             const eventInfo = document.getElementById('eventInfo');
+            
+            // 根據活動分類設定主題色
+            eventInfo.className = 'event-info';
+            if (event['分類'] === '校友會') {
+                eventInfo.classList.add('alumni-theme');
+            } else if (event['分類'] === '其他活動') {
+                eventInfo.classList.add('other-theme');
+            }
+            
             let infoHTML = '';
             
             // 活動時間
@@ -1511,6 +1973,14 @@
             if (event['活動相關連結']) {
                 eventLink.href = event['活動相關連結'];
                 eventLink.style.display = 'inline-block';
+                
+                // 根據活動分類設定按鈕主題色
+                eventLink.className = 'event-link';
+                if (event['分類'] === '校友會') {
+                    eventLink.classList.add('alumni-theme');
+                } else if (event['分類'] === '其他活動') {
+                    eventLink.classList.add('other-theme');
+                }
             } else {
                 eventLink.style.display = 'none';
             }
