@@ -22,4 +22,4 @@ jobs:
 
       - name: Deploy files to AWS
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/id_rsa -p 22211 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa" ./ ubuntu@52.194.159.119:/var/www/html/nycuaa.org/calendar
+          rsync -avz ./ ubuntu@52.194.159.119:/var/www/html/nycuaa.org/calendar
