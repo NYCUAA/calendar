@@ -2000,6 +2000,9 @@
             
             // 顯示 Modal
             document.getElementById('eventModal').style.display = 'block';
+            
+            // 重置捲動位置
+            document.querySelector('#eventModal .modal-content').scrollTop = 0;
         }
 
         // 顯示多個活動的選擇列表
@@ -2054,6 +2057,9 @@
             
             // 顯示 Modal
             document.getElementById('eventModal').style.display = 'block';
+            
+            // 重置捲動位置
+            document.querySelector('#eventModal .modal-content').scrollTop = 0;
         }
 
         // 從活動列表中選擇特定活動顯示詳情
@@ -2067,6 +2073,8 @@
         // 返回活動列表
         function backToEventsList() {
             if (window.currentDayEvents && window.currentDayEvents.length > 1) {
+                // 重置捲動位置
+                document.querySelector('#eventModal .modal-content').scrollTop = 0;
                 showEventsList(window.currentDayEvents, window.currentClickedDate);
             }
         }
@@ -2155,6 +2163,9 @@
             }
             
             document.getElementById('upcomingEventsModal').style.display = 'block';
+            
+            // 重置捲動位置
+            document.querySelector('#upcomingEventsModal .modal-content').scrollTop = 0;
         }
 
         // 從近期活動modal中顯示特定活動詳情
@@ -2162,6 +2173,8 @@
             const event = events.find(e => e['活動名稱'] === eventName);
             if (event) {
                 document.getElementById('upcomingEventsModal').style.display = 'none';
+                // 重置近期活動 Modal 的捲動位置
+                document.querySelector('#upcomingEventsModal .modal-content').scrollTop = 0;
                 showSingleEvent(event);
             }
         }
@@ -2183,28 +2196,38 @@
             // 關閉活動詳情 Modal
             document.getElementById('closeModal').addEventListener('click', () => {
                 document.getElementById('eventModal').style.display = 'none';
+                // 重置捲動位置
+                document.querySelector('#eventModal .modal-content').scrollTop = 0;
             });
             
             // 點擊活動詳情 Modal 外部關閉
             document.getElementById('eventModal').addEventListener('click', (e) => {
                 if (e.target.id === 'eventModal') {
                     document.getElementById('eventModal').style.display = 'none';
+                    // 重置捲動位置
+                    document.querySelector('#eventModal .modal-content').scrollTop = 0;
                 }
             });
 
             // 關閉近期活動 Modal
             document.getElementById('closeUpcomingModal').addEventListener('click', () => {
                 document.getElementById('upcomingEventsModal').style.display = 'none';
+                // 重置捲動位置
+                document.querySelector('#upcomingEventsModal .modal-content').scrollTop = 0;
             });
 
             document.getElementById('closeUpcomingBtn').addEventListener('click', () => {
                 document.getElementById('upcomingEventsModal').style.display = 'none';
+                // 重置捲動位置
+                document.querySelector('#upcomingEventsModal .modal-content').scrollTop = 0;
             });
             
             // 點擊近期活動 Modal 外部關閉
             document.getElementById('upcomingEventsModal').addEventListener('click', (e) => {
                 if (e.target.id === 'upcomingEventsModal') {
                     document.getElementById('upcomingEventsModal').style.display = 'none';
+                    // 重置捲動位置
+                    document.querySelector('#upcomingEventsModal .modal-content').scrollTop = 0;
                 }
             });
 
