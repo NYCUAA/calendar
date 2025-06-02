@@ -547,9 +547,9 @@
 
         /* Today Styling */
         .day.today {
-            background: var(--accent-blue-light);
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 1px var(--accent-blue);
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 1px #f59e0b;
             position: relative;
         }
 
@@ -560,14 +560,29 @@
             right: var(--spacing-2);
             width: 6px;
             height: 6px;
-            background: var(--accent-blue);
+            background: #f59e0b;
             border-radius: 50%;
             box-shadow: 0 0 0 2px var(--background);
         }
 
         .day.today .day-number {
-            color: var(--accent-blue);
+            color: #92400e;
             font-weight: 700;
+        }
+
+        /* Dark mode today styling */
+        [data-theme="dark"] .day.today {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 1px #f59e0b;
+        }
+
+        [data-theme="dark"] .day.today::before {
+            background: #fbbf24;
+        }
+
+        [data-theme="dark"] .day.today .day-number {
+            color: #fbbf24;
         }
 
         /* Past Days */
@@ -608,9 +623,9 @@
 
         /* Today with Events */
         .day.today.has-events.alumni-events {
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
-            border-color: var(--accent-blue);
+            border-color: #f59e0b;
         }
 
         .day.today.has-events.alumni-events .day-number {
@@ -618,9 +633,9 @@
         }
 
         .day.today.has-events.other-events {
-            background: linear-gradient(135deg, var(--accent-rose) 0%, var(--accent-purple) 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
-            border-color: var(--accent-rose);
+            border-color: #f59e0b;
         }
 
         .day.today.has-events.other-events .day-number {
@@ -628,9 +643,9 @@
         }
 
         .day.today.has-events.mixed-events {
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-rose) 50%, var(--accent-purple) 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
-            border-color: var(--accent-blue);
+            border-color: #f59e0b;
         }
 
         .day.today.has-events.mixed-events .day-number {
@@ -714,11 +729,11 @@
         }
 
         .event-item.today {
-            background: var(--surface-elevated);
-            color: var(--text-primary);
-            border-color: var(--accent-blue);
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border-color: #f59e0b;
             font-weight: 600;
-            box-shadow: 0 0 0 1px var(--accent-blue);
+            box-shadow: 0 0 0 1px #f59e0b;
         }
 
         /* Mobile Event Circles - Cute Design */
@@ -752,17 +767,17 @@
                 overflow: hidden;
                 text-overflow: unset;
                 word-break: normal;
-                position: relative;
+            position: relative;
                 cursor: pointer;
                 transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
                 box-shadow: var(--shadow-sm);
                 -webkit-tap-highlight-color: transparent;
                 user-select: none;
-            }
+        }
 
             .event-item::before {
                 content: '';
-                position: absolute;
+            position: absolute;
                 inset: -2px;
                 border-radius: 50%;
                 background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
@@ -822,25 +837,25 @@
 
             /* Today Events - Special Glow */
             .event-item.today.alumni {
-                background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-                border: 2px solid #60a5fa;
-                box-shadow: 0 0 12px rgba(59, 130, 246, 0.4), var(--shadow-md);
+                background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                border: 2px solid #fbbf24;
+                box-shadow: 0 0 12px rgba(245, 158, 11, 0.4), var(--shadow-md);
                 animation: todayGlow 2s ease-in-out infinite alternate;
             }
 
             .event-item.today.other {
-                background: linear-gradient(135deg, #f43f5e 0%, #8b5cf6 100%);
-                border: 2px solid #fb7185;
-                box-shadow: 0 0 12px rgba(244, 63, 94, 0.4), var(--shadow-md);
+                background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                border: 2px solid #fbbf24;
+                box-shadow: 0 0 12px rgba(245, 158, 11, 0.4), var(--shadow-md);
                 animation: todayGlow 2s ease-in-out infinite alternate;
             }
 
             @keyframes todayGlow {
                 0% {
-                    box-shadow: 0 0 8px rgba(59, 130, 246, 0.3), var(--shadow-md);
+                    box-shadow: 0 0 8px rgba(245, 158, 11, 0.3), var(--shadow-md);
                 }
                 100% {
-                    box-shadow: 0 0 16px rgba(59, 130, 246, 0.6), var(--shadow-lg);
+                    box-shadow: 0 0 16px rgba(245, 158, 11, 0.6), var(--shadow-lg);
                 }
             }
 
@@ -866,8 +881,8 @@
 
             /* Multi-day Events - Special Indicator */
             .event-item.multi-day::after {
-                content: '';
-                position: absolute;
+            content: '';
+            position: absolute;
                 bottom: -1px;
                 right: -1px;
                 width: 8px;
@@ -913,7 +928,7 @@
                 width: 6px;
                 height: 6px;
                 bottom: 0;
-                right: 0;
+            right: 0;
                 display: none; /* 確保在所有情況下都隱藏 */
             }
         }
@@ -930,7 +945,7 @@
             .event-item.multi-day::after {
                 width: 6px;
                 height: 6px;
-                bottom: 0;
+            bottom: 0;
                 right: 0;
                 display: none; /* 隱藏多日活動指示器 */
             }
@@ -1172,16 +1187,16 @@
         }
 
         /* Event Links */
-        .event-link {
+    .event-link {
             display: inline-flex;
             align-items: center;
             gap: var(--spacing-2);
             background: var(--accent-blue);
-            color: white;
+        color: white;
             padding: var(--spacing-3) var(--spacing-6);
             border-radius: var(--radius-lg);
-            text-decoration: none;
-            font-weight: 600;
+        text-decoration: none;
+        font-weight: 600;
             font-size: 0.9375rem;
             margin: var(--spacing-5) 0;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1203,51 +1218,53 @@
         }
 
         /* Calendar Buttons */
-        .calendar-buttons {
-            display: flex;
+    .calendar-buttons {
+        display: flex;
             gap: var(--spacing-3);
             margin: var(--spacing-5) 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
-        .calendar-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+    .calendar-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
             gap: var(--spacing-2);
             background: var(--surface-elevated);
             color: var(--text-primary);
             padding: var(--spacing-3) var(--spacing-5);
             border-radius: var(--radius-lg);
-            text-decoration: none;
-            font-weight: 500;
+        text-decoration: none;
+        font-weight: 500;
             font-size: 0.875rem;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
-        }
+    }
 
-        .calendar-btn:hover {
+    .calendar-btn:hover {
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
             border-color: var(--primary-200);
-        }
+    }
 
-        .calendar-btn.google {
-            background: #4285F4;
-            color: white;
-            border-color: #4285F4;
-        }
+    .calendar-btn.google {
+        background: #4285F4;
+        color: white;
+        border-color: #4285F4;
+    }
 
-        .calendar-btn.google:hover {
-            background: #3367d6;
-            border-color: #3367d6;
-        }
+    .calendar-btn.google:hover {
+        background: #3367d6;
+        border-color: #3367d6;
+    }
 
-        .calendar-btn.apple {
+    /* Removed Apple calendar button styles */
+    /*
+    .calendar-btn.apple {
             background: var(--primary-900);
-            color: white;
+        color: white;
             border-color: var(--primary-900);
         }
 
@@ -1255,6 +1272,7 @@
             background: var(--primary-800);
             border-color: var(--primary-800);
         }
+    */
 
         .calendar-icon {
             font-size: 1rem;
@@ -1776,8 +1794,8 @@
                 opacity: 0.8; 
                 transform: scale(1);
             }
-            50% { 
-                opacity: 1; 
+            50% {
+                opacity: 1;
                 transform: scale(1.02);
             }
         }
@@ -2164,16 +2182,16 @@
                 </div>
                 
                 <div class="loading-progress-container">
-                    <div class="loading-dots">
-                        <div class="loading-dot"></div>
-                        <div class="loading-dot"></div>
-                        <div class="loading-dot"></div>
-                    </div>
-                    
-                    <div class="loading-text">載入中</div>
-                    
-                    <div class="loading-progress">
-                        <div class="loading-progress-bar"></div>
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+                
+                <div class="loading-text">載入中</div>
+                
+                <div class="loading-progress">
+                    <div class="loading-progress-bar"></div>
                     </div>
                 </div>
             </div>
@@ -2239,10 +2257,6 @@
                     <a href="#" class="calendar-btn google" id="addToGoogleCalendar" target="_blank">
                         <span class="calendar-icon">📅</span>
                         加入 Google 行事曆
-                    </a>
-                    <a href="#" class="calendar-btn apple" id="addToAppleCalendar" target="_blank">
-                        <span class="calendar-icon">📲</span>
-                        加入 iOS 行事曆
                     </a>
                 </div>
             </div>
@@ -2567,12 +2581,12 @@
                         
                         if (!isMobile) {
                             // 桌面版的多日活動樣式
-                            if (currentDateOnly.getTime() === startDateOnly.getTime()) {
-                                eventItem.classList.add('multi-day-start');
-                            } else if (currentDateOnly.getTime() === endDateOnly.getTime()) {
-                                eventItem.classList.add('multi-day-end');
-                            } else {
-                                eventItem.classList.add('multi-day-middle');
+                        if (currentDateOnly.getTime() === startDateOnly.getTime()) {
+                            eventItem.classList.add('multi-day-start');
+                        } else if (currentDateOnly.getTime() === endDateOnly.getTime()) {
+                            eventItem.classList.add('multi-day-end');
+                        } else {
+                            eventItem.classList.add('multi-day-middle');
                             }
                         }
                     }
@@ -2932,15 +2946,10 @@
         // 設定加入行事曆按鈕
         function setupCalendarButtons(event) {
             const googleCalendarBtn = document.getElementById('addToGoogleCalendar');
-            const appleCalendarBtn = document.getElementById('addToAppleCalendar');
             
             // 生成 Google 行事曆連結
             const googleCalendarUrl = createGoogleCalendarUrl(event);
             googleCalendarBtn.href = googleCalendarUrl;
-            
-            // 生成 iOS/Apple 行事曆連結 (iCal 格式)
-            const icalUrl = createICalUrl(event);
-            appleCalendarBtn.href = icalUrl;
         }
         
         // 生成 Google 行事曆連結
@@ -2978,77 +2987,6 @@
             const eventDetails = encodeURIComponent(event['原始資料'] || '');
             
             return `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${startDateStr}/${endDateStr}&details=${eventDetails}&location=${eventLocation}&sf=true&output=xml`;
-        }
-        
-        // 生成 iCal 格式的連結 (用於 iOS/Apple 行事曆)
-        function createICalUrl(event) {
-            const startDate = new Date(event.startDate);
-            const endDate = new Date(event.endDate);
-            
-            // 將日期格式化為 iCal 要求的格式 (YYYYMMDDTHHMMSSZ)
-            const formatICalDate = (date) => {
-                const pad = (num) => (num < 10 ? '0' + num : num);
-                
-                const year = date.getFullYear();
-                const month = pad(date.getMonth() + 1);
-                const day = pad(date.getDate());
-                const hour = pad(date.getHours());
-                const minute = pad(date.getMinutes());
-                
-                return `${year}${month}${day}T${hour}${minute}00`;
-            };
-            
-            const startDateStr = formatICalDate(startDate);
-            
-            // 如果有結束日期，則使用它；否則結束時間設為開始時間後 1 小時
-            let endDateStr;
-            if (endDate && !isNaN(endDate.getTime())) {
-                endDateStr = formatICalDate(endDate);
-            } else {
-                const defaultEndDate = new Date(startDate.getTime() + 60 * 60 * 1000); // 加 1 小時
-                endDateStr = formatICalDate(defaultEndDate);
-            }
-            
-            // 生成唯一識別碼
-            const uuid = generateUUID();
-            
-            // 構建 iCal 內容
-            const eventTitle = event['活動名稱'] || '活動';
-            const eventLocation = event['活動地點'] || '';
-            const eventDetails = event['原始資料'] || '';
-            const eventOrganizer = event['活動單位'] || 'NYCUAA';
-            
-            const icalContent = [
-                'BEGIN:VCALENDAR',
-                'VERSION:2.0',
-                'PRODID:-//NYCUAA//Calendar//TW',
-                'CALSCALE:GREGORIAN',
-                'METHOD:PUBLISH',
-                'BEGIN:VEVENT',
-                `UID:${uuid}`,
-                `DTSTAMP:${formatICalDate(new Date())}`,
-                `DTSTART:${startDateStr}`,
-                `DTEND:${endDateStr}`,
-                `SUMMARY:${eventTitle}`,
-                `DESCRIPTION:${eventDetails.replace(/\n/g, '\\n')}`,
-                `LOCATION:${eventLocation}`,
-                `ORGANIZER:${eventOrganizer}`,
-                'END:VEVENT',
-                'END:VCALENDAR'
-            ].join('\r\n');
-            
-            // 轉換為 Data URL
-            const icalBlob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
-            return URL.createObjectURL(icalBlob);
-        }
-        
-        // 生成 UUID
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0;
-                const v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
         }
         
         // 設定事件監聽器
